@@ -1,0 +1,49 @@
+debug: true
+
+spring:
+  devtools:
+    livereload:
+      enabled: false
+  redis:
+    database: 1
+    host: ${redis.host:192.168.8.200}
+    port: ${redis.port:6379}
+    password: ${redis.password:""}
+    timeout: 5000
+    pool:
+      max-idle: 8
+      min-idle: 0
+      max-active: 8
+      max-wait: -1
+  rabbitmq:
+    host: ${rabbitmq.host:192.168.8.200}
+    port: ${rabbitmq.port:5672}
+    username: ${rabbitmq.username:admin}
+    password: ${rabbitmq.password:admin}
+    virtual-host: ${rabbitmq.vhost:/}
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://${mysql.host:192.168.8.200}:${mysql.port:3306}/${mysql.database:test}
+    username: ${mysql.username:test}
+    password: ${mysql.password:test}
+    schema: classpath:database/${db.type:mysql}/schema.sql
+    data: classpath:database/${db.type:mysql}/data.sql
+    initialize: ${db.init:true}
+    continueOnError: true
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      filters: stat,wall,log4j,log4j2
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+

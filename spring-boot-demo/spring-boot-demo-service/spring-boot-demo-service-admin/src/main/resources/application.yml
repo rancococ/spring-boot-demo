@@ -1,0 +1,46 @@
+info:
+  build-date: '@project.build.date@'
+  build-version: '@project.build.version@'
+
+server:
+  port: ${port:8080}
+  contextPath: /admin
+  tomcat:
+    max-threads: 100
+    min-spare-threads: 10
+
+management:
+  context-path: '/actuator'
+  security:
+    enabled: false
+  info:
+    build:
+      enabled: true
+
+spring:
+  profiles:
+    active: '@profiles.active@'
+  application:
+    name: spring-boot-admin
+  boot:
+    admin:
+      url: http://${boot.admin.url:localhost}:${server.port}/${server.contextPath}/admin
+  devtools:
+    livereload:
+      enabled: false
+  output:
+    ansi:
+      enabled: DETECT
+  session:
+    store-type: redis
+  redis:
+    database: 1
+    host: ${redis.host:192.168.8.200}
+    port: ${redis.port:6379}
+    password: ${redis.password:''}
+    timeout: 5000
+    pool:
+      max-idle: 8
+      min-idle: 0
+      max-active: 8
+      max-wait: -1

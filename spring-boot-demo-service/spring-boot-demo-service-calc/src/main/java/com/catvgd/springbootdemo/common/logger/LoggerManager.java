@@ -20,8 +20,9 @@ public class LoggerManager implements InitializingBean {
                     try {
                         LoggerMessage loggerMessage = LoggerQueue.getInstance().poll();
                         if (loggerMessage != null) {
-                            if (messagingTemplate != null)
+                            if (messagingTemplate != null) {
                                 messagingTemplate.convertAndSend("/topic/pullLogger", loggerMessage);
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

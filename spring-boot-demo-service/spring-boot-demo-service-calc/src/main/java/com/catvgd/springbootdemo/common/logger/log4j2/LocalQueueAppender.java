@@ -29,8 +29,7 @@ public class LocalQueueAppender extends AbstractAppender {
 
     private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
     private final Lock readLock = rwLock.readLock();
-    private final LoggerQueue loggerQueue = LoggerQueue.getInstance();
-    
+
     // 需要实现的构造方法，直接使用父类就行
     protected LocalQueueAppender(final String name, final Filter filter, final Layout<? extends Serializable> layout,
             final boolean ignoreExceptions) {
@@ -41,10 +40,20 @@ public class LocalQueueAppender extends AbstractAppender {
     public void append(LogEvent event) {
         readLock.lock();
         try {
+            String originalMessage = "";
+            String formattedMessage = "";
+            final Layout<? extends Serializable> layout = this.getLayout();
+            if (layout != null && layout instanceof PatternLayout) {
+                originalMessage = event.getMessage().getFormattedMessage();
+                formattedMessage = ((PatternLayout) layout).toSerializable(event);
+            } else {
+                originalMessage = event.getMessage().getFormattedMessage();
+                formattedMessage = event.getMessage().getFormattedMessage();
+            }
             // 下面这个是要实现的自定义逻辑
-            LoggerMessage loggerMessage = new LoggerMessage(event.getMessage().getFormattedMessage(), event.getTimeMillis(), event.getThreadName(),
-                    event.getLoggerName(), event.getLevel().name());
-            loggerQueue.push(loggerMessage);
+            LoggerMessage loggerMessage = new LoggerMessage(event.getTimeMillis(), event.getThreadName(), event.getLoggerName(),
+                    event.getLevel().name(), originalMessage, formattedMessage);
+            LoggerQueue.getInstance().push(loggerMessage);
         } catch (Exception ex) {
             if (!ignoreExceptions()) {
                 throw new AppenderLoggingException(ex);

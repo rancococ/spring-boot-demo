@@ -10,7 +10,6 @@ public class LoggerManager implements InitializingBean {
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
-    private final LoggerQueue loggerQueue = LoggerQueue.getInstance();
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -19,7 +18,7 @@ public class LoggerManager implements InitializingBean {
             public void run() {
                 while (true) {
                     try {
-                        LoggerMessage loggerMessage = loggerQueue.poll();
+                        LoggerMessage loggerMessage = LoggerQueue.getInstance().poll();
                         if (loggerMessage != null) {
                             if (messagingTemplate != null)
                                 messagingTemplate.convertAndSend("/topic/pullLogger", loggerMessage);
@@ -27,11 +26,6 @@ public class LoggerManager implements InitializingBean {
                     } catch (Exception e) {
                         e.printStackTrace();
                     } finally {
-                        try {
-                            Thread.sleep(3000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
                     }
                 }
             }

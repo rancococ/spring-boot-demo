@@ -2,6 +2,7 @@ package com.catvgd.springbootdemo.common.logger;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 public class LoggerQueue {
 
@@ -34,7 +35,12 @@ public class LoggerQueue {
      * @return
      */
     public boolean push(LoggerMessage loggerMessage) {
-        return this.blockingQueue.add(loggerMessage);// 队列满了就抛出异常，不阻塞
+        try {
+            return this.blockingQueue.offer(loggerMessage, 3, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     /**
@@ -44,7 +50,11 @@ public class LoggerQueue {
      */
     public LoggerMessage poll() {
         LoggerMessage result = null;
-        result = this.blockingQueue.poll();
+        try {
+            result = this.blockingQueue.take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return result;
     }
 

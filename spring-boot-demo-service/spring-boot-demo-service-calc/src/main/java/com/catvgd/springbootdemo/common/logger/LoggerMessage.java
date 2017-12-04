@@ -6,29 +6,23 @@ public class LoggerMessage implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String body;
     private long timestamp;
     private String threadName;
     private String loggerName;
     private String level;
+    private String originalMessage;
+    private String formattedMessage;
 
-    public LoggerMessage(String body, long timestamp, String threadName, String loggerName, String level) {
-        this.body = body;
+    public LoggerMessage(long timestamp, String threadName, String loggerName, String level, String originalMessage, String formattedMessage) {
         this.timestamp = timestamp;
         this.threadName = threadName;
         this.loggerName = loggerName;
         this.level = level;
+        this.originalMessage = originalMessage;
+        this.formattedMessage = formattedMessage;
     }
 
     public LoggerMessage() {
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
     }
 
     public long getTimestamp() {
@@ -63,10 +57,26 @@ public class LoggerMessage implements Serializable {
         this.level = level;
     }
 
+    public String getOriginalMessage() {
+        return originalMessage;
+    }
+
+    public void setOriginalMessage(String originalMessage) {
+        this.originalMessage = originalMessage;
+    }
+
+    public String getFormattedMessage() {
+        return formattedMessage;
+    }
+
+    public void setFormattedMessage(String formattedMessage) {
+        this.formattedMessage = formattedMessage;
+    }
+
     @Override
     public String toString() {
-        return "LoggerMessage [body=" + body + ", timestamp=" + timestamp + ", threadName=" + threadName + ", loggerName=" + loggerName + ", level="
-                + level + "]";
+        return "LoggerMessage [timestamp=" + timestamp + ", threadName=" + threadName + ", loggerName=" + loggerName + ", level=" + level
+                + ", originalMessage=" + originalMessage + ", formattedMessage=" + formattedMessage + "]";
     }
 
 }

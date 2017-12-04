@@ -1,8 +1,7 @@
 package com.catvgd.springbootdemo.common.logger;
 
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 public class LoggerQueue {
 
@@ -14,7 +13,7 @@ public class LoggerQueue {
     private BlockingQueue<LoggerMessage> blockingQueue = null;
 
     private LoggerQueue() {
-        blockingQueue = new LinkedBlockingQueue<LoggerMessage>(QUEUE_MAX_SIZE);
+        blockingQueue = new ArrayBlockingQueue<LoggerMessage>(QUEUE_MAX_SIZE);
     }
 
     public static LoggerQueue getInstance() {
@@ -31,16 +30,16 @@ public class LoggerQueue {
     /**
      * 消息入队
      * 
-     * @param log
+     * @param loggerMessage
      * @return
      */
     public boolean push(LoggerMessage loggerMessage) {
-        try {
-            return this.blockingQueue.offer(loggerMessage, 3, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        boolean result = this.blockingQueue.offer(loggerMessage);
+        if (!result) {
+            this.blockingQueue.poll();
+            result = this.blockingQueue.offer(loggerMessage);
         }
-        return false;
+        return result;
     }
 
     /**

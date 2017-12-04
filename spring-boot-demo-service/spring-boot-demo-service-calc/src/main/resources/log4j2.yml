@@ -37,7 +37,7 @@ Configuration:
 
   Appenders:  
     Console:  #输出到控制台  
-      name: Console
+      name: console_appender
       target: SYSTEM_OUT  
       ThresholdFilter:  
         level: trace
@@ -140,7 +140,8 @@ Configuration:
     Root:  
       level: ${sys:log_level}
       AppenderRef:  
-        - ref: Console
+        - ref: console_appender
+        - ref: local_queue_appender
     Logger:
       - name: org.springframework
         level: info
@@ -179,4 +180,3 @@ Configuration:
           - ref: info_appender
           - ref: warn_appender
           - ref: error_appender
-          - ref: local_queue_appender

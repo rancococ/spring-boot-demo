@@ -1,6 +1,7 @@
 Configuration:  
   status: warn
   monitorInterval: 600
+  packages: "com.catvgd.springbootdemo.common.logger.log4j2"
 
   Properties: # 定义全局变量
     Property:
@@ -40,8 +41,17 @@ Configuration:
       target: SYSTEM_OUT  
       ThresholdFilter:  
         level: trace
-        onMatch: ACCEPT  
-        onMismatch: DENY  
+        onMatch: ACCEPT
+        onMismatch: DENY
+      PatternLayout:
+        charset: UTF-8
+        pattern: "${console_pattern}"
+    LocalQueue:
+      name: local_queue_appender
+      ThresholdFilter:  
+        level: trace
+        onMatch: ACCEPT
+        onMismatch: DENY
       PatternLayout:
         charset: UTF-8
         pattern: "${console_pattern}"
@@ -169,3 +179,4 @@ Configuration:
           - ref: info_appender
           - ref: warn_appender
           - ref: error_appender
+          - ref: local_queue_appender

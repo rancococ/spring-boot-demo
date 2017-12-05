@@ -46,8 +46,8 @@ Configuration:
       PatternLayout:
         charset: UTF-8
         pattern: "${console_pattern}"
-    LocalQueue:
-      name: local_queue_appender
+    LocalJmx:
+      name: local_jmx_appender
       ThresholdFilter:  
         level: trace
         onMatch: ACCEPT
@@ -141,7 +141,7 @@ Configuration:
       level: ${sys:log_level}
       AppenderRef:  
         - ref: console_appender
-        - ref: local_queue_appender
+        - ref: local_jmx_appender
     Logger:
       - name: org.springframework
         level: info

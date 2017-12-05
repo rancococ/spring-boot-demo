@@ -75,12 +75,12 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) { // 配置消息代理(message broker)
         // 点对点式增加一个/queue 消息代理
-        // registry.enableSimpleBroker("/queue", "/topic");
-        registry.enableStompBrokerRelay("/topic") // 设置可以订阅的地址，也就是服务器可以发送的地址
-                // .setRelayHost(ConfigureUtil.getProperty("BrokerUrl")).setRelayPort(Integer.valueOf(ConfigureUtil.getProperty("BrokerPort"))) //
-                // 设置broker的地址及端口号
-                .setSystemHeartbeatReceiveInterval(2000) // 设置心跳信息接收时间间隔
-                .setSystemHeartbeatSendInterval(2000); // 设置心跳信息发送时间间隔
+        registry.enableSimpleBroker("/queue", "/topic");
+//        registry.enableStompBrokerRelay("/topic") // 设置可以订阅的地址，也就是服务器可以发送的地址
+//                // .setRelayHost(ConfigureUtil.getProperty("BrokerUrl")).setRelayPort(Integer.valueOf(ConfigureUtil.getProperty("BrokerPort"))) //
+//                // 设置broker的地址及端口号
+//                .setSystemHeartbeatReceiveInterval(2000) // 设置心跳信息接收时间间隔
+//                .setSystemHeartbeatSendInterval(2000); // 设置心跳信息发送时间间隔
         registry.setApplicationDestinationPrefixes("/ws");
     }
 

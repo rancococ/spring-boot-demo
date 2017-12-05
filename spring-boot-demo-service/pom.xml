@@ -194,14 +194,12 @@
         </dependency>
         <!-- 注意，devtools采用了两个classloader分别加载第三方jar和业务类，如果需要扩展第三方jar需要屏蔽此包 -->
         <!-- 生产环境需要移除此包的引用 -->
-        <!--
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
             <scope>runtime</scope>
         </dependency>
-        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

@@ -7,16 +7,19 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
  * JSON工具
@@ -36,25 +39,25 @@ public class JacksonUtil {
         // 使用注解的mapper
         // 设置日期格式
         useAnnotationMapper.setDateFormat(df);
-//        // 不把date转换成timestamps
-//        useAnnotationMapper.configure(SerializationConfig.Feature.WRITE_DATES_AS_TIMESTAMPS, false);
-//        // 忽略不存在的字段
-//        useAnnotationMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-//        // 允许没加引号的字段
-//        useAnnotationMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-//        // 是否使用注解
-//        useAnnotationMapper.configure(SerializationConfig.Feature.USE_ANNOTATIONS, true);
+        // 不把date转换成timestamps
+        useAnnotationMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        // 是否使用注解
+        useAnnotationMapper.configure(MapperFeature.USE_ANNOTATIONS, true);
+        // 忽略不存在的字段
+        useAnnotationMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        // 允许没加引号的字段
+        useAnnotationMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
         // 不使用注解的mapper
         // 设置日期格式
         notUseAnnotationMapper.setDateFormat(df);
-//        // 不把date转换成timestamps
-//        notUseAnnotationMapper.configure(SerializationConfig.Feature.WRITE_DATES_AS_TIMESTAMPS, false);
-//        // 忽略不存在的字段
-//        notUseAnnotationMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-//        // 允许没加引号的字段
-//        notUseAnnotationMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-//        // 是否使用注解
-//        notUseAnnotationMapper.configure(SerializationConfig.Feature.USE_ANNOTATIONS, false);
+        // 不把date转换成timestamps
+        notUseAnnotationMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        // 是否使用注解
+        notUseAnnotationMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
+        // 忽略不存在的字段
+        notUseAnnotationMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        // 允许没加引号的字段
+        notUseAnnotationMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
     }
 
     /**
@@ -79,7 +82,7 @@ public class JacksonUtil {
         StringWriter writer = new StringWriter();
         JsonGenerator generator = null;
         try {
-            generator = factory.createJsonGenerator(writer);
+            generator = factory.createGenerator(writer);
             if (useAnnotation) {
                 useAnnotationMapper.writeValue(generator, obj);
             } else {

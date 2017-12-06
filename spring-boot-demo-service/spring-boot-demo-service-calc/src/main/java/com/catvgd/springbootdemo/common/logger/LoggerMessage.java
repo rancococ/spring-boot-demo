@@ -9,15 +9,15 @@ public class LoggerMessage implements Serializable {
     private long timestamp;
     private String threadName;
     private String loggerName;
-    private String level;
+    private String loggerLevel;
     private String originalMessage;
     private String formattedMessage;
 
-    public LoggerMessage(long timestamp, String threadName, String loggerName, String level, String originalMessage, String formattedMessage) {
+    public LoggerMessage(long timestamp, String threadName, String loggerName, String loggerLevel, String originalMessage, String formattedMessage) {
         this.timestamp = timestamp;
         this.threadName = threadName;
         this.loggerName = loggerName;
-        this.level = level;
+        this.loggerLevel = loggerLevel;
         this.originalMessage = originalMessage;
         this.formattedMessage = formattedMessage;
     }
@@ -49,12 +49,12 @@ public class LoggerMessage implements Serializable {
         this.loggerName = loggerName;
     }
 
-    public String getLevel() {
-        return level;
+    public String getLoggerLevel() {
+        return loggerLevel;
     }
 
-    public void setLevel(String level) {
-        this.level = level;
+    public void setLoggerLevel(String loggerLevel) {
+        this.loggerLevel = loggerLevel;
     }
 
     public String getOriginalMessage() {
@@ -75,7 +75,7 @@ public class LoggerMessage implements Serializable {
 
     @Override
     public String toString() {
-        return "LoggerMessage [timestamp=" + timestamp + ", threadName=" + threadName + ", loggerName=" + loggerName + ", level=" + level
+        return "LoggerMessage [timestamp=" + timestamp + ", threadName=" + threadName + ", loggerName=" + loggerName + ", loggerLevel=" + loggerLevel
                 + ", originalMessage=" + originalMessage + ", formattedMessage=" + formattedMessage + "]";
     }
 

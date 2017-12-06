@@ -36,8 +36,10 @@ public class Log4j2Manager extends NotificationBroadcasterSupport implements Log
     @SuppressWarnings("unchecked")
     @Override
     public List<String> listLoggerInfo(String loggerNamePrefix) {
-        Enumeration<Logger> currentLoggers = LogManager.getCurrentLoggers();
         List<String> loggerList = new ArrayList<String>();
+        Logger rootLogger = Logger.getRootLogger();
+        loggerList.add(rootLogger.getName() + " : " + rootLogger.getLevel());
+        Enumeration<Logger> currentLoggers = LogManager.getCurrentLoggers();
         while (currentLoggers.hasMoreElements()) {
             Logger logger = currentLoggers.nextElement();
             if (StringUtil.startsWithIgnoreCase(logger.getName(), loggerNamePrefix)) {

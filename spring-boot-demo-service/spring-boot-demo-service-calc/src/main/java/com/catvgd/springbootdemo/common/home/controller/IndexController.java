@@ -19,7 +19,9 @@ public class IndexController {
 
     @RequestMapping(value = "/plus", method = RequestMethod.GET)
     public int plus(int a, int b) {
+        logger.debug("{} + {} = {}", a, b, (a + b));
         logger.info("{} + {} = {}", a, b, (a + b));
+        logger.error("{} + {} = {}", a, b, (a + b));
         return a + b;
     }
 

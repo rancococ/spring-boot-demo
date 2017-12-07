@@ -1,16 +1,16 @@
 package com.catvgd.springbootdemo.common.logger.log4j2;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.management.Notification;
 import javax.management.NotificationBroadcasterSupport;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
 
 import com.catvgd.springbootdemo.common.util.StringUtil;
 
@@ -33,15 +33,12 @@ public class Log4j2Manager extends NotificationBroadcasterSupport implements Log
         return instance;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<String> listLoggerInfo(String loggerNamePrefix) {
         List<String> loggerList = new ArrayList<String>();
-        Logger rootLogger = Logger.getRootLogger();
-        loggerList.add(rootLogger.getName() + " : " + rootLogger.getLevel());
-        Enumeration<Logger> currentLoggers = LogManager.getCurrentLoggers();
-        while (currentLoggers.hasMoreElements()) {
-            Logger logger = currentLoggers.nextElement();
+        LoggerContext loggerContext = LoggerContext.getContext(false);
+        Collection<Logger> currentLoggers = loggerContext.getLoggers();
+        for (Logger logger : currentLoggers) {
             if (StringUtil.startsWithIgnoreCase(logger.getName(), loggerNamePrefix)) {
                 loggerList.add(logger.getName() + " : " + logger.getLevel());
             }
@@ -51,7 +48,8 @@ public class Log4j2Manager extends NotificationBroadcasterSupport implements Log
 
     @Override
     public String changeLoggerLevel(String loggerName, String loggerLevel) {
-        Logger logger = LogManager.exists(loggerName);
+        LoggerContext loggerContext = LoggerContext.getContext(false);
+        Logger logger = loggerContext.getLogger(loggerName);
         String result = "";
         if (logger != null) {
             logger.setLevel(Level.toLevel(loggerLevel));

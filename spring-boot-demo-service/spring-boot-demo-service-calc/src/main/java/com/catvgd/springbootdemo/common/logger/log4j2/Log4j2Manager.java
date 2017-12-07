@@ -40,7 +40,7 @@ public class Log4j2Manager extends NotificationBroadcasterSupport implements Log
         Collection<Logger> currentLoggers = loggerContext.getLoggers();
         for (Logger logger : currentLoggers) {
             if (StringUtil.startsWithIgnoreCase(logger.getName(), loggerNamePrefix)) {
-                loggerList.add(logger.getName() + " : " + logger.getLevel());
+                loggerList.add("[" + logger.getName() + "] | [" + logger.getLevel() + "]");
             }
         }
         return loggerList;
@@ -53,12 +53,25 @@ public class Log4j2Manager extends NotificationBroadcasterSupport implements Log
         String result = "";
         if (logger != null) {
             logger.setLevel(Level.toLevel(loggerLevel));
-            result = logger.getName() + " | " + logger.getLevel();
+            result = "logger [" + logger.getName() + "] | [" + logger.getLevel() + "]";
         } else {
             result = "logger [" + loggerName + "] not exist.";
         }
         return result;
+    }
 
+    @Override
+    public String changeRootLoggerLevel(String loggerLevel) {
+        LoggerContext loggerContext = LoggerContext.getContext(false);
+        Logger logger = loggerContext.getRootLogger();
+        String result = "";
+        if (logger != null) {
+            logger.setLevel(Level.toLevel(loggerLevel));
+            result = "logger [root] | [" + logger.getLevel() + "]";
+        } else {
+            result = "logger [root] not exist.";
+        }
+        return result;
     }
 
     public void pushLogger(String message) {

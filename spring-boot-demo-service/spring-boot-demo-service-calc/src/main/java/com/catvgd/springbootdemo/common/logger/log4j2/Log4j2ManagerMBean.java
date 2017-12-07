@@ -21,4 +21,13 @@ public interface Log4j2ManagerMBean {
      */
     public String changeLoggerLevel(String loggerName, String loggerLevel);
 
+    /**
+     * 改变根日志的级别
+     * 
+     * @param loggerName
+     * @param loggerLevel
+     * @return
+     */
+    public String changeRootLoggerLevel(String loggerLevel);
+    
 }

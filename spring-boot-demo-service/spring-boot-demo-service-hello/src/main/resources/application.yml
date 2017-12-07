@@ -51,6 +51,12 @@ spring:
       min-idle: 0
       max-active: 8
       max-wait: -1
+  rabbitmq:
+    host: ${rabbitmq.host:192.168.8.200}
+    port: ${rabbitmq.port:5672}
+    username: ${rabbitmq.username:admin}
+    password: ${rabbitmq.password:admin}
+    virtual-host: ${rabbitmq.vhost:/}
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver

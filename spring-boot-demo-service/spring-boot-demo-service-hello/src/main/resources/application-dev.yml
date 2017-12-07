@@ -29,7 +29,7 @@ spring:
     password: ${mysql.password:test}
     schema: classpath:database/${db.type:mysql}/schema.sql
     data: classpath:database/${db.type:mysql}/data.sql
-    initialize: ${db.init:true}
+    initialize: ${db.init:false}
     continueOnError: true
     druid:
       initial-size: 5

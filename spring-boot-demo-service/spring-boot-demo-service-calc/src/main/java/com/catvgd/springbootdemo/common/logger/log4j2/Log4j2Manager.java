@@ -60,20 +60,6 @@ public class Log4j2Manager extends NotificationBroadcasterSupport implements Log
         return result;
     }
 
-    @Override
-    public String changeRootLoggerLevel(String loggerLevel) {
-        LoggerContext loggerContext = LoggerContext.getContext(false);
-        Logger logger = loggerContext.getRootLogger();
-        String result = "";
-        if (logger != null) {
-            logger.setLevel(Level.toLevel(loggerLevel));
-            result = "logger [root] | [" + logger.getLevel() + "]";
-        } else {
-            result = "logger [root] not exist.";
-        }
-        return result;
-    }
-
     public void pushLogger(String message) {
         Notification notification = new Notification("LoggerMonitor", this, seq.getAndIncrement(), System.currentTimeMillis(), message);
         notification.setUserData("user");

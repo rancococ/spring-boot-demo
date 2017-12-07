@@ -17,11 +17,18 @@ management:
     build:
       enabled: true
 
+endpoints: 
+  jmx:
+    domain: spring-boot-calc
+    unique-names: true
+
 spring:
   profiles:
     active: '@profiles.active@'
   application:
     name: spring-boot-calc
+  jmx:
+    default-domain: spring-boot-calc
   boot:
     admin:
       url: http://${boot.admin.url:localhost}:${boot.admin.port:8080}/admin

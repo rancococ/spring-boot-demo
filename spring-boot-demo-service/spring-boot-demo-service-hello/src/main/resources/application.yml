@@ -17,11 +17,18 @@ management:
     build:
       enabled: true
 
+endpoints: 
+  jmx:
+    domain: spring-boot-hello
+    unique-names: true
+
 spring:
   profiles:
     active: '@profiles.active@'
   application:
     name: spring-boot-hello
+  jmx:
+    default-domain: spring-boot-hello
   boot:
     admin:
       url: http://${boot.admin.url:localhost}:${boot.admin.port:8080}/admin
@@ -65,7 +72,11 @@ spring:
       max-pool-prepared-statement-per-connection-size: 20
       filters: stat,wall,log4j,log4j2
       connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
-
+  messages:
+    basename: i18n/messages,i18n/resource/messages,i18n/system/messages
+    cache-seconds: 3600
+    encoding: UTF-8
+    
 mybatis:
   mapper-locations:
     - classpath:com/catvgd/springbootdemo/common/*/mapper/*Mapper.xml

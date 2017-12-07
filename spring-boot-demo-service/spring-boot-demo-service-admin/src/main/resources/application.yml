@@ -17,11 +17,18 @@ management:
     build:
       enabled: true
 
+endpoints: 
+  jmx:
+    domain: spring-boot-admin
+    unique-names: true
+
 spring:
   profiles:
     active: '@profiles.active@'
   application:
     name: spring-boot-admin
+  jmx:
+    default-domain: spring-boot-admin
   boot:
     admin:
       url: http://${boot.admin.url:localhost}:${server.port}/${server.contextPath}/admin

@@ -21,6 +21,8 @@ Configuration:
       - name: log_style # 日志样式
         value: "FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=green, TRACE=white"
       - name: console_pattern # 控制台样式
+        value: "[%d{yyyy-MM-dd HH:mm:ss.SSS}] - [%-5level] [%15.15t] %logger{1.}.%M()/%L - %m%n"
+      - name: console_pattern2 # 控制台样式
         value: "%highlight{[%d{yyyy-MM-dd HH:mm:ss.SSS}] - [%-5level] [%15.15t] %logger{1.}.%M()/%L - %m%n}{${log_style}}"
       - name: file_pattern # 文件样式
         value: "[%d{yyyy-MM-dd HH:mm:ss.SSS}] - [%-5level] [%15.15t] %logger{1.}.%M()/%L - %msg%xEx%n"
@@ -34,12 +36,12 @@ Configuration:
 
   Appenders:  
     Console:  #输出到控制台  
-      name: Console
+      name: console_appender
       target: SYSTEM_OUT  
       ThresholdFilter:  
         level: trace
-        onMatch: ACCEPT  
-        onMismatch: DENY  
+        onMatch: ACCEPT
+        onMismatch: DENY
       PatternLayout:
         charset: UTF-8
         pattern: "${console_pattern}"
@@ -128,7 +130,7 @@ Configuration:
     Root:  
       level: ${sys:log_level}
       AppenderRef:  
-        - ref: Console
+        - ref: console_appender
     Logger:
       - name: org.springframework
         level: info

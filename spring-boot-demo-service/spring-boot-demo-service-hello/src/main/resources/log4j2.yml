@@ -36,12 +36,12 @@ Configuration:
 
   Appenders:  
     Console:  #输出到控制台  
-      name: Console
+      name: console_appender
       target: SYSTEM_OUT  
       ThresholdFilter:  
         level: trace
-        onMatch: ACCEPT  
-        onMismatch: DENY  
+        onMatch: ACCEPT
+        onMismatch: DENY
       PatternLayout:
         charset: UTF-8
         pattern: "${console_pattern}"
@@ -130,7 +130,7 @@ Configuration:
     Root:  
       level: ${sys:log_level}
       AppenderRef:  
-        - ref: Console
+        - ref: console_appender
     Logger:
       - name: org.springframework
         level: info

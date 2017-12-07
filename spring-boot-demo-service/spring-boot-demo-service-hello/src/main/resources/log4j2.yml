@@ -150,6 +150,16 @@ Configuration:
         level: info
       - name: com.alibaba
         level: info
+      - name: druid.sql
+        level: debug
+      - name: druid.sql.DataSource
+        level: warn
+      - name: druid.sql.Connection
+        level: warn
+      - name: druid.sql.Statement
+        level: debug
+      - name: druid.sql.ResultSet
+        level: warn
       - name: com.catvgd
         level: ${sys:log_level}
         includeLocation: true

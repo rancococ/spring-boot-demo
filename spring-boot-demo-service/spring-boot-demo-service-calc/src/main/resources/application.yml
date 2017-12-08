@@ -57,6 +57,11 @@ spring:
     username: ${rabbitmq.username:admin}
     password: ${rabbitmq.password:admin}
     virtual-host: ${rabbitmq.vhost:/}
+  zookeeper:
+    enabled: true
+    connectAddress: ${zookeeper.address:192.168.8.200:2181}
+    sessionTimeout: 30000
+    connectionTimeout: 30000
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver

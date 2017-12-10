@@ -41,10 +41,10 @@ spring:
   session:
     store-type: redis
   redis:
-    database: 1
+    database: 0
     host: ${redis.host:192.168.8.200}
     port: ${redis.port:6379}
-    password: ${redis.password:''}
+    password: ${redis.password:123456}
     timeout: 5000
     pool:
       max-idle: 8

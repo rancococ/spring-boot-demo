@@ -15,19 +15,30 @@ import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher.Event.EventType;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.data.Stat;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
-public class CuratorTest {
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@EnableAutoConfiguration
+public class CuratorJunitTest {
 
+    @Autowired
     private CuratorFramework zkClient;
 
     private ConcurrentSkipListSet<String> watchers = new ConcurrentSkipListSet<String>();
 
     private static Charset charset = Charset.forName("utf-8");
 
-    public CuratorTest() {
-        zkClient = CuratorFrameworkFactory.builder().connectString("192.168.8.200:2181").namespace("zktest").retryPolicy(new RetryNTimes(2000, 20000))
-                .build();
-        zkClient.start();
+    public CuratorJunitTest() {
+        // zkClient = CuratorFrameworkFactory.builder().connectString("192.168.8.200:2181").namespace("zktest").retryPolicy(new RetryNTimes(2000,
+        // 20000))
+        // .build();
+        // zkClient.start();
     }
 
     public void addReconnectionWatcher(final String path, final ZookeeperWatcherType watcherType, final CuratorWatcher watcher) {
@@ -67,6 +78,7 @@ public class CuratorTest {
         }
     }
 
+    @Test
     public void create() throws Exception {
         String path = "/zk/test";
         Stat stat = zkClient.checkExists().forPath(path);
@@ -79,6 +91,7 @@ public class CuratorTest {
         }
     }
 
+    @Test
     public void put() throws Exception {
         String path = "/zk/test";
         Stat stat = zkClient.checkExists().forPath(path);
@@ -88,6 +101,7 @@ public class CuratorTest {
         }
     }
 
+    @Test
     public void get() throws Exception {
         String path = "/zk/test";
         ZKWatch watch = new ZKWatch(path);
@@ -100,6 +114,7 @@ public class CuratorTest {
         }
     }
 
+    @Test
     public void register() throws Exception {
         String ip = InetAddress.getLocalHost().getHostAddress();
         String registeNode = "/zk/register/" + ip;// 节点路径
@@ -116,14 +131,14 @@ public class CuratorTest {
         System.out.println("get path form zk : " + registeNode + ":" + new String(data, charset));
     }
 
-    public static void main(String[] args) throws Exception {
-        CuratorTest test = new CuratorTest();
-        test.create();
-        test.put();
-        test.get();
-        test.register();
-        Thread.sleep(10000000000L);
-    }
+    // public static void main(String[] args) throws Exception {
+    // CuratorJunitTest test = new CuratorJunitTest();
+    // test.create();
+    // test.put();
+    // test.get();
+    // test.register();
+    // Thread.sleep(10000000000L);
+    // }
 
     public class ZKWatch implements CuratorWatcher {
 

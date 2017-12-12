@@ -1,10 +1,16 @@
 package com.catvgd.springbootdemo;
 
+import java.util.Random;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -16,7 +22,7 @@ public class AmqpTest {
     private Logger logger = LoggerFactory.getLogger(AmqpTest.class);
 
     @Autowired
-    private org.springframework.amqp.rabbit.core.RabbitTemplate rabbitTemplate;
+    private AmqpTemplate amqpTemplate;
 
     private String queue_key = "key.message";
 
@@ -26,14 +32,20 @@ public class AmqpTest {
 
     @Test
     public void send() throws Exception {
-        try {
-            logger.info("-----------------------------------------");
-            rabbitTemplate.convertAndSend(queue_key, "NIHAO..............");
-            logger.info("-----------------------------------------");
-        } catch (Exception e) {
-            // LOGGER.error(e);
+        logger.info("-----------------start------------------------");
+        Random random = new Random();
+        for (int i = 1; i <= 100; i++) {
+            final int priority = random.nextInt(10 - 1 + 1) + 1;// 随机的优先级
+            amqpTemplate.convertAndSend(queue_key, (Object) ("---No " + i + "---this is test message---"), new MessagePostProcessor() {
+                @Override
+                public Message postProcessMessage(Message message) throws AmqpException {
+                    message.getMessageProperties().setPriority(priority);
+                    return message;
+                }
+            });
         }
-        Thread.sleep(100000);
+        logger.info("-----------------end--------------------------");
+        Thread.sleep(10000);
     }
 
 }

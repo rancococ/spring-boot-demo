@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -14,9 +16,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.catvgd.springbootdemo.biz.calc.controller.UserController;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTest {
+
+    private Logger logger = LoggerFactory.getLogger(UserControllerTest.class);
 
     @Autowired
     private WebApplicationContext context;
@@ -29,11 +35,17 @@ public class UserControllerTest {
 
     @Test
     public void getUserList() throws Exception {
-        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/user/list").accept(MediaType.APPLICATION_JSON)).andReturn();
-        int statusCode = result.getResponse().getStatus();
-        Assert.assertEquals(statusCode, 200);
-        String body = result.getResponse().getContentAsString();
-        System.out.println("body:" + body);
+        long s = System.currentTimeMillis();
+        for (int i = 1; i <= 1000; i++) {
+            MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/user/list").accept(MediaType.APPLICATION_JSON)).andReturn();
+            int statusCode = result.getResponse().getStatus();
+            Assert.assertEquals(statusCode, 200);
+            String body = result.getResponse().getContentAsString();
+            // System.out.println("--" + i + "--body:" + body);
+        }
+        long e = System.currentTimeMillis();
+        long c = (e - s);
+        logger.info("cost : " + c + "ms");
     }
 
     // @Test

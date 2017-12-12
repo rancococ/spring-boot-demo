@@ -41,28 +41,28 @@ public class UserController {
     @ApiOperation(value = "用户列表")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public List<User> getUserList(HttpSession session) {
-        logger.info("id(zh):" + messageSource.getMessage("user.id", null, Locale.CHINA));
-        logger.info("name(en):" + messageSource.getMessage("user.name", null, Locale.US));
-        logger.info("id(zh):" + messageSource.getMessage("system.user.id", null, Locale.CHINA));
-        logger.info("name(en):" + messageSource.getMessage("system.user.name", null, Locale.US));
+        // logger.info("id(zh):" + messageSource.getMessage("user.id", null, Locale.CHINA));
+        // logger.info("name(en):" + messageSource.getMessage("user.name", null, Locale.US));
+        // logger.info("id(zh):" + messageSource.getMessage("system.user.id", null, Locale.CHINA));
+        // logger.info("name(en):" + messageSource.getMessage("system.user.name", null, Locale.US));
         List<User> userList = userService.getUserList();
-        logger.info("====user list size====" + userList.size());
+        // logger.info("====user list size====" + userList.size());
 
         UUID uid = (UUID) session.getAttribute("uid");
         if (uid == null) {
             uid = UUID.randomUUID();
         }
         session.setAttribute("uid", uid);
-        logger.info("====session====");
+        // logger.info("====session====");
         logger.info("sid:" + session.getId());
-        logger.info("uid:" + uid);
+        // logger.info("uid:" + uid);
 
         Object obj = objectRedisTemplate.opsForValue().get("abc");
         if (obj == null) {
             objectRedisTemplate.opsForValue().set("abc", "123");
         }
-        logger.info(objectRedisTemplate.opsForValue().get("abc").toString());
-        logger.info(stringRedisTemplate.keys("*").toString());
+        // logger.info(objectRedisTemplate.opsForValue().get("abc").toString());
+        // logger.info(stringRedisTemplate.keys("*").toString());
 
         return userList;
     }

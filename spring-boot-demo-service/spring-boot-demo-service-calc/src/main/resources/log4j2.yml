@@ -166,13 +166,13 @@ Configuration:
       - name: druid.sql
         level: debug
       - name: druid.sql.DataSource
-        level: warn
+        level: info
       - name: druid.sql.Connection
-        level: warn
+        level: info
       - name: druid.sql.Statement
-        level: debug
+        level: info
       - name: druid.sql.ResultSet
-        level: warn
+        level: info
       - name: com.catvgd
         level: ${sys:log_level}
         includeLocation: true

@@ -22,10 +22,11 @@ public class TestListener {
     @RabbitHandler
     public void handler(Message message) {
         if (message.getMessageProperties() != null) {
-            logger.info(message.getMessageProperties().toString());
+            // logger.info(message.getMessageProperties().toString());
+            logger.info("Priority : " + message.getMessageProperties().getPriority());
         }
         String jsonMessage = new String(message.getBody());
-        logger.info(jsonMessage);
+        // logger.info(jsonMessage);
         if (handlerList != null && !handlerList.isEmpty()) {
             for (IHandler handler : handlerList) {
                 handler.handler(jsonMessage);

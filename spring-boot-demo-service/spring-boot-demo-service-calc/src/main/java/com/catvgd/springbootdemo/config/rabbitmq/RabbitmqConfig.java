@@ -21,43 +21,54 @@ import java.util.Map;
 @EnableRabbit
 public class RabbitmqConfig {
 
-    @Bean
+    @Bean(name = "rabbitAdmin")
     public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
         return new RabbitAdmin(connectionFactory);
     }
 
     @Bean(name = "test1")
-    public Queue rabbitQueue() {
+    public Queue rabbitQueue(@Qualifier(value = "rabbitAdmin") RabbitAdmin rabbitAdmin) {
         Map<String, Object> props = new HashMap<String, Object>();
         props.put("x-max-priority", 10);
-        return new Queue("test1", true, false, false, props);
+        Queue queue = new Queue("test1", true, false, false, props);
+        rabbitAdmin.declareQueue(queue);
+        return queue;
     }
 
     @Bean(name = "test2")
-    public Queue rabbitQueue2() {
+    public Queue rabbitQueue2(@Qualifier(value = "rabbitAdmin") RabbitAdmin rabbitAdmin) {
         Map<String, Object> props = new HashMap<String, Object>();
         props.put("x-max-priority", 10);
-        return new Queue("test2", true, false, false, props);
+        Queue queue = new Queue("test2", true, false, false, props);
+        rabbitAdmin.declareQueue(queue);
+        return queue;
     }
 
     @Bean(name = "topic-exchange")
-    public TopicExchange exchange() {
-        return new TopicExchange("exchange", true, false);
+    public TopicExchange exchange(@Qualifier(value = "rabbitAdmin") RabbitAdmin rabbitAdmin) {
+        TopicExchange exchange = new TopicExchange("topic-exchange", true, false);
+        rabbitAdmin.declareExchange(exchange);
+        return exchange;
     }
 
     @Bean
-    public Binding bindingExchangeMessage(@Qualifier(value = "test1") Queue queue, @Qualifier(value = "topic-exchange") TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with("topic.message");
+    public Binding bindingExchangeMessage(@Qualifier(value = "rabbitAdmin") RabbitAdmin rabbitAdmin, @Qualifier(value = "test1") Queue queue,
+            @Qualifier(value = "topic-exchange") TopicExchange exchange) {
+        Binding binding = BindingBuilder.bind(queue).to(exchange).with("key.message");
+        rabbitAdmin.declareBinding(binding);
+        return binding;
     }
 
     @Bean
-    public Binding bindingExchangeMessage2(@Qualifier(value = "test2") Queue queue, @Qualifier(value = "topic-exchange") TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with("topic.message2");
+    public Binding bindingExchangeMessage2(@Qualifier(value = "rabbitAdmin") RabbitAdmin rabbitAdmin, @Qualifier(value = "test2") Queue queue,
+            @Qualifier(value = "topic-exchange") TopicExchange exchange) {
+        Binding binding = BindingBuilder.bind(queue).to(exchange).with("key.message2");
+        rabbitAdmin.declareBinding(binding);
+        return binding;
     }
 
     @Bean
-    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory,
-                                         Jackson2JsonMessageConverter messageConverter) {
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, Jackson2JsonMessageConverter messageConverter) {
         RabbitTemplate template = new RabbitTemplate(connectionFactory);
         template.setMessageConverter(messageConverter);
         template.setExchange("topic-exchange");
@@ -70,7 +81,8 @@ public class RabbitmqConfig {
     }
 
     @Bean
-    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory, Jackson2JsonMessageConverter messageConverter) {
+    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory,
+            Jackson2JsonMessageConverter messageConverter) {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
         factory.setMessageConverter(messageConverter);

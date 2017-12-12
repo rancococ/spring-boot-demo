@@ -18,7 +18,7 @@ public class TestListener {
     @Autowired
     private List<IHandler> handlerList;
 
-    @RabbitListener(queues = {"test1"}, containerFactory = "rabbitListenerContainerFactory")
+    @RabbitListener(queues = { "test1" }, containerFactory = "rabbitListenerContainerFactory")
     @RabbitHandler
     public void handler(Message message) {
         if (message.getMessageProperties() != null) {
@@ -28,7 +28,7 @@ public class TestListener {
         logger.info(jsonMessage);
         if (handlerList != null && !handlerList.isEmpty()) {
             for (IHandler handler : handlerList) {
-                handler.handler();
+                handler.handler(jsonMessage);
             }
         }
     }

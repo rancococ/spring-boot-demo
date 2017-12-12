@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Order(value = 99999)
-public class DefaultHandler implements IHandler {
+public class DefaultMessageHandler implements IMessageHandler {
 
-    private Logger logger = LoggerFactory.getLogger(DefaultHandler.class);
+    private Logger logger = LoggerFactory.getLogger(DefaultMessageHandler.class);
 
     public void handler(String message) {
         logger.info(message);

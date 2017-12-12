@@ -11,12 +11,12 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class TestListener {
+public class MessageListenerContainer {
 
-    private final Logger logger = LoggerFactory.getLogger(TestListener.class);
+    private final Logger logger = LoggerFactory.getLogger(MessageListenerContainer.class);
 
     @Autowired
-    private List<IHandler> handlerList;
+    private List<IMessageHandler> handlerList;
 
     @RabbitListener(queues = { "test1" }, containerFactory = "rabbitListenerContainerFactory")
     @RabbitHandler
@@ -28,10 +28,25 @@ public class TestListener {
         String jsonMessage = new String(message.getBody());
         // logger.info(jsonMessage);
         if (handlerList != null && !handlerList.isEmpty()) {
-            for (IHandler handler : handlerList) {
+            for (IMessageHandler handler : handlerList) {
                 handler.handler(jsonMessage);
             }
         }
     }
 
+    @RabbitListener(queues = { "test2" }, containerFactory = "rabbitListenerContainerFactory")
+    @RabbitHandler
+    public void handler2(Message message) {
+        if (message.getMessageProperties() != null) {
+            // logger.info(message.getMessageProperties().toString());
+            logger.info("Priority : " + message.getMessageProperties().getPriority());
+        }
+        String jsonMessage = new String(message.getBody());
+        // logger.info(jsonMessage);
+        if (handlerList != null && !handlerList.isEmpty()) {
+            for (IMessageHandler handler : handlerList) {
+                handler.handler(jsonMessage);
+            }
+        }
+    }
 }

@@ -10,7 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageBuilder;
 import org.springframework.amqp.core.MessagePostProcessor;
+import org.springframework.amqp.core.MessageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -39,8 +41,8 @@ public class AmqpTest {
             amqpTemplate.convertAndSend(queue_key, (Object) ("---No " + i + "---this is test message---"), new MessagePostProcessor() {
                 @Override
                 public Message postProcessMessage(Message message) throws AmqpException {
-                    message.getMessageProperties().setPriority(priority);
-                    return message;
+                    return MessageBuilder.fromMessage(message).setContentType(MessageProperties.CONTENT_TYPE_JSON).setContentEncoding("UTF-8")
+                            .setPriority(priority).build();
                 }
             });
         }

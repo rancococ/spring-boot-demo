@@ -129,6 +129,13 @@
         </dependency>
         <!-- zookeeper -->
 
+        <!-- shiro -->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring</artifactId>
+        </dependency>
+        <!-- shiro -->
+
     </dependencies>
 
     <build>

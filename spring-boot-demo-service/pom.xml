@@ -37,6 +37,7 @@
         <jmxtools.version>1.2.1</jmxtools.version>
         <zookeeper.version>3.4.11</zookeeper.version>
         <curator.version>4.0.0</curator.version>
+        <shiro.version>1.4.0</shiro.version>
     </properties>
 
     <dependencyManagement>
@@ -167,6 +168,13 @@
                 <scope>test</scope>
             </dependency>
             <!-- zookeeper -->
+            <!-- shiro -->
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-spring</artifactId>
+                <version>${shiro.version}</version>
+            </dependency>
+            <!-- shiro -->
 
             <!-- spring-boot-admin -->
             <dependency>

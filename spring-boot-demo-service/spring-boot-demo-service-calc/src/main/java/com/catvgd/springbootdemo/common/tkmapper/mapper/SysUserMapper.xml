@@ -5,9 +5,13 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <id column="USER_ID" jdbcType="VARCHAR" property="userId" />
-    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
-    <result column="REAL_NAME" jdbcType="VARCHAR" property="realName" />
-    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <id column="UID" jdbcType="BIGINT" property="uid" />
+    <result column="USERNAME" jdbcType="VARCHAR" property="username" />
+    <result column="PASSWARD" jdbcType="VARCHAR" property="passward" />
+    <result column="EMAIL" jdbcType="VARCHAR" property="email" />
+    <result column="STATUS" jdbcType="BIGINT" property="status" />
+    <result column="LAST_LOGIN_TIME" jdbcType="TIMESTAMP" property="lastLoginTime" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
 </mapper>

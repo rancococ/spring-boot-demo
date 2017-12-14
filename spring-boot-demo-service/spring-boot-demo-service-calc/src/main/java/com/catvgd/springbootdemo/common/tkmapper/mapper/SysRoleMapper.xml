@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.catvgd.springbootdemo.common.tkmapper.mapper.SysRoleMapper">
+  <resultMap id="BaseResultMap" type="com.catvgd.springbootdemo.common.tkmapper.model.SysRole">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="RID" jdbcType="BIGINT" property="rid" />
+    <result column="ROLE_NAME" jdbcType="VARCHAR" property="roleName" />
+    <result column="ROLE_TYPE" jdbcType="VARCHAR" property="roleType" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+</mapper>

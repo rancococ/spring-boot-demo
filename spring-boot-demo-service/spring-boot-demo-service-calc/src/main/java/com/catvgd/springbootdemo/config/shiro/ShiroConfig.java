@@ -7,10 +7,12 @@ import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.cache.CacheManager;
+import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.mgt.RememberMeManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.slf4j.Logger;
@@ -20,22 +22,30 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
-import com.catvgd.springbootdemo.common.shiro.RedisSessionDao;
-import com.catvgd.springbootdemo.common.shiro.MyShiroRealm;
+import com.catvgd.springbootdemo.common.shiro.ShiroAuthRealm;
 
 @Configuration
 public class ShiroConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(ShiroConfig.class);
 
-    @Bean
-    public MyShiroRealm userRealm() {
-        return new MyShiroRealm();
-    }
+    // @Bean
+    // public ShiroAuthRealm userRealm() {
+    // return new ShiroAuthRealm();
+    // }
+    //
+    // @Bean
+    // public SessionDAO redisSessionDao() {
+    // return new ShiroSessionDao();
+    // }
 
     @Bean
-    public SessionDAO redisSessionDao() {
-        return new RedisSessionDao();
+    public CacheManager memoryCacheManager() {
+        return new MemoryConstrainedCacheManager();
+    }
+    @Bean
+    public RememberMeManager cookieRememberMeManager() {
+        return new CookieRememberMeManager();
     }
 
     @Bean
@@ -50,7 +60,7 @@ public class ShiroConfig {
     }
 
     @Bean
-    public SecurityManager securityManager(MyShiroRealm userRealm, CacheManager cacheManager, SessionManager sessionManager,
+    public SecurityManager securityManager(ShiroAuthRealm userRealm, CacheManager cacheManager, SessionManager sessionManager,
             RememberMeManager rememberMeManager) {
         logger.info("注入Shiro的Web过滤器-->securityManager", ShiroFilterFactoryBean.class);
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
@@ -114,7 +124,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/**", "authc");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
-        System.out.println("Shiro拦截器工厂类注入成功");
+        logger.info("Shiro拦截器工厂类注入成功");
         return shiroFilterFactoryBean;
     }
 

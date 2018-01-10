@@ -3,6 +3,8 @@ package com.catvgd.springbootdemo.common.shiro;
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.Resource;
+
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
 import org.slf4j.Logger;
@@ -12,15 +14,15 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RedisSessionDao extends EnterpriseCacheSessionDAO {
+public class ShiroSessionDao extends EnterpriseCacheSessionDAO {
 
-    private static Logger logger = LoggerFactory.getLogger(RedisSessionDao.class);
+    private static Logger logger = LoggerFactory.getLogger(ShiroSessionDao.class);
 
     // session 在redis过期时间是30分钟30*60
     private static int expireTime = 1800;
     private static String prefix = "shiro-session:";
 
-    @Autowired
+    @Resource(name = "objectRedisTemplate")
     private RedisTemplate<Serializable, Session> redisTemplate;
 
     // 创建session，保存到数据库

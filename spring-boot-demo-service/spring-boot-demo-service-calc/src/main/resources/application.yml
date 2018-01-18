@@ -19,6 +19,7 @@ management:
 
 endpoints: 
   jmx:
+    enabled: true
     domain: spring-boot-calc
     unique-names: true
 
@@ -28,6 +29,7 @@ spring:
   application:
     name: spring-boot-calc
   jmx:
+    enabled: true
     default-domain: spring-boot-calc
   boot:
     admin:

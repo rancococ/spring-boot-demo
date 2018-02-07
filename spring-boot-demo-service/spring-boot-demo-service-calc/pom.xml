@@ -17,6 +17,9 @@
         <project.build.version>1.0.0</project.build.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <docker.host>http://192.168.8.200:2375</docker.host>
+        <docker.repostory>192.168.8.251</docker.repostory>
+        <docker.registry.name>gdxw</docker.registry.name>
         <!-- Java接口和实体类 -->
         <targetJavaProject>${basedir}/src/main/java</targetJavaProject>
         <targetMapperPackage>com.catvgd.springbootdemo.common.tkmapper.mapper</targetMapperPackage>
@@ -140,6 +143,40 @@
 
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
+        <resources>
+            <!-- 指定所有资源文件都要打进包内，不写可能导致所有资源文件无法打进包 -->
+            <!-- filtering属性要设置为false，否则xls文件会被maven转码导致打不开 -->
+            <resource>
+                <targetPath>${project.build.directory}/classes</targetPath>
+                <directory>src/main/java</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <targetPath>${project.build.directory}/classes</targetPath>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*</include>
+                    <include>**/*.*</include>
+                </includes>
+            </resource>
+            <resource>
+                <targetPath>${project.build.directory}/docker</targetPath>
+                <directory>src/main/docker</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/Dockerfile</include>
+                    <include>**/docker-entrypoint.sh</include>
+                    <include>**/wrapper-java-additional.temp</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -187,43 +224,108 @@
                     </dependency>
                 </dependencies>
             </plugin>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>tag-image</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>tag</goal>
+                        </goals>
+                        <configuration>
+                            <image>${docker.registry.name}/${project.artifactId}:latest</image>
+                            <newName>${docker.repostory}/${docker.registry.name}/${project.artifactId}:${project.version}</newName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>tag-image2</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>tag</goal>
+                        </goals>
+                        <configuration>
+                            <image>${docker.registry.name}/${project.artifactId}:latest</image>
+                            <newName>${docker.repostory}/${docker.registry.name}/${project.artifactId}:latest</newName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>push-image</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>push</goal>
+                        </goals>
+                        <configuration>
+                            <imageName>${docker.repostory}/${docker.registry.name}/${project.artifactId}:${project.version}</imageName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>push-image2</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>push</goal>
+                        </goals>
+                        <configuration>
+                            <imageName>${docker.repostory}/${docker.registry.name}/${project.artifactId}:latest</imageName>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- 私有仓库配置，需要settings.xml文件配合serverId对应的服务地址 -->
+                    <serverId>harbor</serverId>
+                    <registryUrl>${docker.repostory}</registryUrl>
+                    <forceTags>true</forceTags>
+                    <!--install阶段也上传，否则只有deploy阶段上传 -->
+                    <pushImage>false</pushImage>
+                    <dockerDirectory>${project.build.directory}/docker</dockerDirectory>
+                    <dockerHost>${docker.host}</dockerHost>
+                    <imageName>${docker.registry.name}/${project.artifactId}</imageName>
+                    <imageTags>
+                        <!--docker的tag为项目版本号、latest -->
+                        <imageTag>${project.version}</imageTag>
+                        <imageTag>latest</imageTag>
+                    </imageTags>
+                    <resources>
+                        <rescource><!-- 将打包文件放入dockerDirectory指定的位置 -->
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </rescource>
+                        <!-- 输出Dockerfile至docker文件夹,如果不使用占位符,可使用以下配置 -->
+                        <!-- <resource> -->
+                        <!-- <targetPath>${project.build.directory}/docker</targetPath> -->
+                        <!-- <directory>src/main/docker</directory> -->
+                        <!-- <filtering>true</filtering> -->
+                        <!-- <includes> -->
+                        <!-- <include>**/Dockerfile</include> -->
+                        <!-- <include>**/docker-entrypoint.sh</include> -->
+                        <!-- <include>**/wrapper-java-additional.temp</include> -->
+                        <!-- </includes> -->
+                        <!-- </resource> -->
+                    </resources>
+                </configuration>
+            </plugin>
         </plugins>
-        <resources>
-            <!-- 指定所有资源文件都要打进包内，不写可能导致所有资源文件无法打进包 -->
-            <!-- filtering属性要设置为false，否则xls文件会被maven转码导致打不开 -->
-            <resource>
-                <targetPath>${project.build.directory}/classes</targetPath>
-                <directory>src/main/java</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/*.xml</include>
-                </includes>
-                <excludes>
-                    <exclude>**/*.java</exclude>
-                </excludes>
-            </resource>
-            <resource>
-                <targetPath>${project.build.directory}/classes</targetPath>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/*</include>
-                    <include>**/*.*</include>
-                </includes>
-            </resource>
-        </resources>
     </build>
 
     <distributionManagement>
         <snapshotRepository>
             <id>maven-snapshots</id>
             <name>maven-snapshots</name>
-            <url>http://192.168.8.202:8081/repository/maven-snapshots/</url>
+            <url>http://192.168.8.242:8081/repository/maven-snapshots/</url>
         </snapshotRepository>
         <repository>
             <id>maven-releases</id>
             <name>maven-releases</name>
-            <url>http://192.168.8.202:8081/repository/maven-releases/</url>
+            <url>http://192.168.8.242:8081/repository/maven-releases/</url>
         </repository>
     </distributionManagement>
 

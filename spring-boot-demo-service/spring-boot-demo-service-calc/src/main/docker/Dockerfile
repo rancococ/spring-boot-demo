@@ -15,6 +15,12 @@ COPY ${MYAPP_NAME} ${MYAPP_HOME}/lib
 COPY docker-entrypoint.sh /
 COPY wrapper-java-additional.temp ${MYAPP_HOME}/conf/
 
+# run script
+RUN chown -R myapp:myapp ${MYAPP_HOME} && \
+    chmod -Rf u+x ${MYAPP_HOME}/bin/* && \
+    chmod 777 ${MYAPP_HOME}/temp && \
+    chmod +x /docker-entrypoint.sh
+
 # set environment
 ENV MYAPP_NAME @project.build.finalName@.@project.packaging@
 ENV MYAPP_VERSION @project.version@

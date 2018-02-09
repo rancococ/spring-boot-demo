@@ -17,6 +17,7 @@
         <project.build.version>1.0.0</project.build.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <webserver.repostory>http://172.16.7.242/webdav</webserver.repostory>
         <docker.host>http://192.168.8.200:2375</docker.host>
         <docker.repostory>192.168.8.251</docker.repostory>
         <docker.registry.name>gdxw</docker.registry.name>
@@ -177,6 +178,23 @@
                 </includes>
             </resource>
         </resources>
+        <extensions>
+            <!-- <extension> -->
+            <!-- <groupId>org.apache.maven.wagon</groupId> -->
+            <!-- <artifactId>wagon-ssh</artifactId> -->
+            <!-- <version>2.12</version> -->
+            <!-- </extension> -->
+            <!-- <extension> -->
+            <!-- <groupId>org.apache.maven.wagon</groupId> -->
+            <!-- <artifactId>wagon-http</artifactId> -->
+            <!-- <version>2.12</version> -->
+            <!-- </extension> -->
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-webdav-jackrabbit</artifactId>
+                <version>2.12</version>
+            </extension>
+        </extensions>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -223,6 +241,37 @@
                         <version>3.4.3</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>wagon-maven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-to-webserver</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>upload-single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <serverId>webserver</serverId>
+                    <!-- 需要部署的文件 -->
+                    <fromFile>${project.build.directory}/${project.build.finalName}.jar</fromFile>
+                    <!-- 部署目录 -->
+                    <url>dav:${webserver.repostory}</url>
+                    <!-- <commands> -->
+                    <!-- 关闭tomcat -->
+                    <!-- <command>/home/hadoop/apache-tomcat-8.0.5/bin/shutdown.sh</command> -->
+                    <!-- 删除之前解压后的目录 -->
+                    <!-- <command>rm -rf /home/hadoop/apache-tomcat-8.0.5/webapps/osc-shop -->
+                    <!-- </command> -->
+                    <!-- 启动tomcat -->
+                    <!-- <command>/home/hadoop/apache-tomcat-8.0.5/bin/startup.sh</command> -->
+                    <!-- </commands> -->
+                    <!-- <displayCommandOutputs>true</displayCommandOutputs> -->
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>com.spotify</groupId>
@@ -294,11 +343,12 @@
                         <imageTag>latest</imageTag>
                     </imageTags>
                     <resources>
-                        <rescource><!-- 将打包文件放入dockerDirectory指定的位置 -->
-                            <targetPath>/</targetPath>
-                            <directory>${project.build.directory}</directory>
-                            <include>${project.build.finalName}.jar</include>
-                        </rescource>
+                        <!-- 将打包文件放入dockerDirectory指定的位置 -->
+                        <!-- <rescource> -->
+                        <!-- <targetPath>/</targetPath> -->
+                        <!-- <directory>${project.build.directory}</directory> -->
+                        <!-- <include>${project.build.finalName}.jar</include> -->
+                        <!-- </rescource> -->
                         <!-- 输出Dockerfile至docker文件夹,如果不使用占位符,可使用以下配置 -->
                         <!-- <resource> -->
                         <!-- <targetPath>${project.build.directory}/docker</targetPath> -->
